@@ -4,6 +4,11 @@ body {
   width: 100%;
 }
 
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
 #root {
   height: 100%;
   width: 100%;
@@ -60,7 +65,44 @@ h1 {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   padding: 1rem;
   text-overflow: ellipsis;
-  overflow: hidden;
+  overflow: auto;
+  color: black;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    input,
+    textarea {
+      padding: 0.5rem;
+      border: 1px solid black;
+      border-radius: 10px;
+      background-color: transparent;
+      color: black;
+      resize: vertical;
+    }
+
+    label {
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+  }
+}
+
+.edit-button {
+  position: absolute;
+  background-color: transparent;
+  margin: 1rem;
+  color: black;
+  right: 0;
+  top: 0;
 }
 
 .resize-border {

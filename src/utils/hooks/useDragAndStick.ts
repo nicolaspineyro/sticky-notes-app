@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { setZIndex } from "..";
 
 interface Bounds {
   minX: number;
@@ -53,6 +54,7 @@ export const useDragAndStick = (
     }
 
     dragRef.current = e.currentTarget as HTMLElement;
+    setZIndex(dragRef.current);
   };
 
   const handleDrag = (e: React.DragEvent) => {

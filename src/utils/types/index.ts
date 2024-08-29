@@ -6,4 +6,8 @@ export type NoteType = {
   content: string;
   color: NOTES_COLORS;
   created_at: Date;
+  position?: {
+    x: number;
+    y: number;
+  };
 };
