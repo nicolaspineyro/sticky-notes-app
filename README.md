@@ -2,7 +2,7 @@
 
 Welcome to the Sticky Notes App repository! This project is a solution to the challenge of building a Sticky Notes App, where the user can create, edit, and delete notes.
 
-![sticky-notes](https://github.com/user-attachments/assets/fa3ba377-0f57-4965-8e82-c9163cfb0577)
+![ScreenRecording2024-08-29at12 40 37PM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/b133efb5-38e6-41a3-93c2-deeb353e7da2)
 
 ### Overview And Solution
 
@@ -42,7 +42,7 @@ These are the custom hooks built:
   - useResize: Similar to useDragAndStick, contains the logic necessary for resizing an HTML element by dragging.
   - useNotes: Contains the business logic necessary for adding, deleting, and editing a note, is a deeper level of abstraction to not consume the context directly, and separates the responsibilities accordingly. Is handy to consume it whenever we want inside the Notes Context.
   - useNoteContext: little abstraction to consume directly the context if needed.
-  - useNote: this is an encapsulation of the business logic for the ```Note``` component, helps separates the presentation from business.
+  - useNote: this is an encapsulation of the business logic for the ```Note``` component, which helps separate the presentation logic from the business logic.
 
 Context: 
   NoteContext: For better organization events and state management I used useReducer. So in the future want to track user actions we can do it easily.
