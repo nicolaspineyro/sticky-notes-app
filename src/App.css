@@ -36,3 +36,12 @@ h1 {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+.resize-border {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  cursor: nwse-resize;
+}
