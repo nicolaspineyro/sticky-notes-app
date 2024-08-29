@@ -99,7 +99,7 @@ h1 {
 .edit-button {
   position: absolute;
   background-color: transparent;
-  margin: 1rem;
+  padding: 0.5rem;
   color: black;
   right: 0;
   top: 0;

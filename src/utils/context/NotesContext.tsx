@@ -6,6 +6,7 @@ import {
   useReducer,
 } from "react";
 import { NoteType } from "../types";
+import { loadFromLocalStorage, saveToLocalStorage } from "..";
 
 interface NotesState {
   notes: NoteType[];
@@ -85,17 +86,6 @@ const notesReducer = (state: NotesState, action: NotesAction): NotesState => {
   return newState;
 };
 
-const STORAGE_KEY = "sticky_notes";
-
-const saveToLocalStorage = (notes: NoteType[]) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
-};
-
-const loadFromLocalStorage = (): NoteType[] => {
-  const storedNotes = localStorage.getItem(STORAGE_KEY);
-  return storedNotes ? JSON.parse(storedNotes) : [];
-};
-
 export const NotesProvider = ({ children }: { children: ReactElement }) => {
   const [state, dispatch] = useReducer(notesReducer, {
     notes: [],
@@ -108,7 +98,6 @@ export const NotesProvider = ({ children }: { children: ReactElement }) => {
       const storedNotes = loadFromLocalStorage();
       dispatch({ type: "FETCH_NOTES_SUCCESS", payload: storedNotes });
     };
-
     loadNotes();
   }, []);
 

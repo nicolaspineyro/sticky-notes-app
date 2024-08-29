@@ -4,14 +4,8 @@ import { useNotes } from "../../utils/hooks/useNotes";
 import LoadingSpinner from "../UI/LoadingSpinner";
 
 const NotesBoard = () => {
-  const { state, addNote, deleteNote } = useNotes();
+  const { state, addNote, handleDrop } = useNotes();
   const { notes, isLoading, error } = state;
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const id = e.dataTransfer.getData("text/plain");
-    deleteNote(Number(id));
-  };
 
   if (error) return <div>Error: {error}</div>;
 

@@ -46,10 +46,17 @@ export const useNotes = () => {
     }
   };
 
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    deleteNote(Number(id));
+  };
+
   return {
     state,
     addNote,
     deleteNote,
     editNote,
+    handleDrop,
   };
 };
