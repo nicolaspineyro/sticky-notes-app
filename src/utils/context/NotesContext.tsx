@@ -20,6 +20,14 @@ type NotesAction =
   | { type: "ADD_NOTE_START" }
   | { type: "ADD_NOTE_SUCCESS"; payload: NoteType }
   | { type: "ADD_NOTE_ERROR"; payload: string }
+  | {
+      type: "SAVE_NOTE_POSITION";
+      payload: { id: number; position: { x: number; y: number } };
+    }
+  | {
+      type: "SAVE_NOTE_SIZE";
+      payload: { id: number; size: { width: number; height: number } };
+    }
   | { type: "UPDATE_NOTE_START" }
   | { type: "UPDATE_NOTE_SUCCESS"; payload: NoteType }
   | { type: "UPDATE_NOTE_ERROR"; payload: string }
@@ -54,6 +62,7 @@ const notesReducer = (state: NotesState, action: NotesAction): NotesState => {
         notes: [...state.notes, action.payload],
         isLoading: false,
       };
+      saveToLocalStorage(newState.notes);
       break;
     case "UPDATE_NOTE_SUCCESS":
       newState = {
@@ -62,6 +71,28 @@ const notesReducer = (state: NotesState, action: NotesAction): NotesState => {
           note.id === action.payload.id ? action.payload : note
         ),
         isLoading: false,
+      };
+      saveToLocalStorage(newState.notes);
+      break;
+    case "SAVE_NOTE_POSITION":
+      newState = {
+        ...state,
+        notes: state.notes.map((note) =>
+          note.id === action.payload.id
+            ? { ...note, position: action.payload.position }
+            : note
+        ),
+      };
+      saveToLocalStorage(newState.notes);
+      break;
+    case "SAVE_NOTE_SIZE":
+      newState = {
+        ...state,
+        notes: state.notes.map((note) =>
+          note.id === action.payload.id
+            ? { ...note, size: action.payload.size }
+            : note
+        ),
       };
       saveToLocalStorage(newState.notes);
       break;

@@ -10,23 +10,24 @@ interface Bounds {
 
 export const useDragAndStick = (
   id: number,
-  boundsRef: React.RefObject<HTMLElement>
+  initialPosition: { x: number; y: number },
+  boundsRef: React.RefObject<HTMLElement>,
+  elementRef: React.RefObject<HTMLElement>
 ) => {
-  const [position, setPosition] = useState({ x: 350, y: 350 });
+  const [position, setPosition] = useState(initialPosition);
   const [bounds, setBounds] = useState<Bounds>({
     minX: 0,
     maxX: 0,
     minY: 0,
     maxY: 0,
   });
-  const dragRef = useRef<HTMLElement | null>(null);
   const dragStartPosRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const updateBounds = () => {
-      if (boundsRef.current && dragRef.current) {
+      if (boundsRef.current && elementRef.current) {
         const whiteBoardRect = boundsRef.current.getBoundingClientRect();
-        const noteRect = dragRef.current.getBoundingClientRect();
+        const noteRect = elementRef.current.getBoundingClientRect();
 
         setBounds({
           minX: 0,
@@ -37,10 +38,22 @@ export const useDragAndStick = (
       }
     };
 
+    const resizeObserver = new ResizeObserver(() => {
+      updateBounds();
+    });
+
+    if (elementRef.current) {
+      resizeObserver.observe(elementRef.current);
+    }
+
     updateBounds();
     window.addEventListener("resize", updateBounds);
-    return () => window.removeEventListener("resize", updateBounds);
-  }, [boundsRef]);
+
+    return () => {
+      window.removeEventListener("resize", updateBounds);
+      resizeObserver.disconnect();
+    };
+  }, [boundsRef, elementRef]);
 
   const handleDragStart = (e: React.DragEvent) => {
     dragStartPosRef.current = {
@@ -48,13 +61,14 @@ export const useDragAndStick = (
       y: e.clientY - position.y,
     };
 
-    if (e.dataTransfer) {
-      e.dataTransfer.setData("text/plain", id.toString());
-      e.dataTransfer.effectAllowed = "move";
-    }
+    const emptyImage = document.createElement("img");
+    emptyImage.src =
+      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    e.dataTransfer.setDragImage(emptyImage, 0, 0);
+    e.dataTransfer.setData("text/plain", id.toString());
+    e.dataTransfer.effectAllowed = "move";
 
-    dragRef.current = e.currentTarget as HTMLElement;
-    setZIndex(dragRef.current);
+    setZIndex(elementRef.current);
   };
 
   const handleDrag = (e: React.DragEvent) => {
@@ -76,5 +90,10 @@ export const useDragAndStick = (
     left: position.x,
   } as React.CSSProperties;
 
-  return { dragRef, stickyStyles, handleDragStart, handleDrag };
+  return {
+    position,
+    stickyStyles,
+    handleDragStart,
+    handleDrag,
+  };
 };

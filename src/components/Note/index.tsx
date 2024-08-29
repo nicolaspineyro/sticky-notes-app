@@ -2,6 +2,7 @@ import { NoteType } from "../../utils/types";
 import { useResize } from "../../utils/hooks/useResize";
 import { useDragAndStick } from "../../utils/hooks/useDragAndStick";
 import { useNote } from "./useNote";
+import { useRef } from "react";
 
 interface INoteProps {
   data: NoteType;
@@ -9,27 +10,41 @@ interface INoteProps {
 }
 
 const Note = ({ data, boundsRef }: INoteProps) => {
-  const { id, color } = data;
-  const { renderNoteContent } = useNote(data);
-  const { resizeStyles, isResizing, resizeMouseDown } = useResize();
-  const { dragRef, stickyStyles, handleDrag, handleDragStart } =
-    useDragAndStick(id, boundsRef);
+  const { id, color, position: initialPosition, size: initialSize } = data;
+  const noteRef = useRef<HTMLElement>(null);
+  const { renderNoteContent, handleDragEnd, handleResizeEnd } = useNote(data);
+  const {
+    position: currentPosition,
+    stickyStyles,
+    handleDrag,
+    handleDragStart,
+  } = useDragAndStick(id, initialPosition, boundsRef, noteRef);
+  const { currentSize, isResizing, resizeMouseDown } = useResize(
+    boundsRef,
+    initialSize
+  );
 
   return (
     <article
-      ref={dragRef}
-      className={"note"}
+      id={`note-${id}`}
+      ref={noteRef}
+      className={`note ${isResizing ? "no-select" : ""}`}
       style={{
         ...stickyStyles,
-        ...resizeStyles,
+        ...currentSize,
         backgroundColor: color,
       }}
       draggable={!isResizing}
       onDrag={handleDrag}
       onDragStart={handleDragStart}
+      onDragEnd={(e: React.DragEvent) => handleDragEnd(e, currentPosition)}
     >
       {renderNoteContent()}
-      <div className="resize-border" onMouseDown={resizeMouseDown} />
+      <div
+        className="resize-border"
+        onMouseDown={resizeMouseDown}
+        onMouseUp={() => handleResizeEnd(currentSize)}
+      />
     </article>
   );
 };

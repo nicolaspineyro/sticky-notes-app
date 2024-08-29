@@ -4,11 +4,6 @@ body {
   width: 100%;
 }
 
-::-webkit-scrollbar {
-  width: 0px;
-  background: transparent;
-}
-
 #root {
   height: 100%;
   width: 100%;
@@ -33,6 +28,8 @@ h1 {
 }
 
 .delete-zone {
+  display: flex;
+  flex-direction: column;
   margin: 2rem;
   align-self: flex-end;
   border: 1px solid #ff6961;
@@ -41,8 +38,8 @@ h1 {
   justify-content: center;
   align-items: center;
   color: #ff6961;
-  width: 100px;
-  height: 100px;
+  width: 15rem;
+  height: 15rem;
 }
 
 .notes-board {
@@ -57,7 +54,6 @@ h1 {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 .note {
@@ -96,10 +92,16 @@ h1 {
   }
 }
 
+.note::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
 .edit-button {
   position: absolute;
   background-color: transparent;
   padding: 0.5rem;
+  margin: 0.25rem;
   color: black;
   right: 0;
   top: 0;

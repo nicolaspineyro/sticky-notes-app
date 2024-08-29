@@ -1,15 +1,8 @@
-interface IDeleteZoneProps {
-  onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
-}
-
-const DeleteZone = ({ onDrop }: IDeleteZoneProps) => {
+const DeleteZone = () => {
   return (
-    <div
-      onDrop={onDrop}
-      onDragOver={(e) => e.preventDefault()}
-      className="delete-zone"
-    >
+    <div className="delete-zone">
       <i className="fas fa-trash"></i>
+      <p>Drop elements to delete</p>
     </div>
   );
 };

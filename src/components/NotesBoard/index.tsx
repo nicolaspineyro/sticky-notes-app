@@ -1,10 +1,9 @@
 import WhiteBoard from "../WhiteBoard";
-import DeleteZone from "./DeleteZone";
 import { useNotes } from "../../utils/hooks/useNotes";
 import LoadingSpinner from "../UI/LoadingSpinner";
 
 const NotesBoard = () => {
-  const { state, addNote, handleDrop } = useNotes();
+  const { state, addNote } = useNotes();
   const { notes, isLoading, error } = state;
 
   if (error) return <div>Error: {error}</div>;
@@ -13,13 +12,12 @@ const NotesBoard = () => {
     <section className="notes-board">
       <div className="header">
         <div className="header-title">
-          <h1>Sticky Notes</h1>
+          <h1>DreamNotes</h1>
           <button onClick={addNote} disabled={isLoading}>
-            + Add Note
+            <i className="fa-solid fa-plus"></i>
           </button>
           {isLoading && <LoadingSpinner />}
         </div>
-        <DeleteZone onDrop={handleDrop} />
       </div>
       <WhiteBoard notes={notes} />
     </section>

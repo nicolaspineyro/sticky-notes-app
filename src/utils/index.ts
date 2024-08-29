@@ -1,6 +1,7 @@
 import { NoteType } from "./types";
 
-export const setZIndex = (selectedNote: HTMLElement) => {
+export const setZIndex = (selectedNote: HTMLElement | null) => {
+  if (!selectedNote) return;
   selectedNote.style.zIndex = "1000";
 
   const notes = Array.from(document.getElementsByClassName("note"));

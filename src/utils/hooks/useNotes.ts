@@ -14,6 +14,14 @@ export const useNotes = () => {
       content: "New Note Content",
       color: Object.values(NOTES_COLORS)[Math.floor(Math.random() * 10)],
       created_at: new Date(),
+      position: {
+        x: 350,
+        y: 350,
+      },
+      size: {
+        width: 200,
+        height: 200,
+      },
     };
     try {
       const addedNote = await simulateApiCall(newNote);
@@ -33,6 +41,17 @@ export const useNotes = () => {
       console.error(error);
       dispatch({ type: "DELETE_NOTE_ERROR", payload: "Failed to delete note" });
     }
+  };
+
+  const saveNotePosition = (id: number, position: { x: number; y: number }) => {
+    dispatch({ type: "SAVE_NOTE_POSITION", payload: { id, position } });
+  };
+
+  const saveNoteSize = (
+    id: number,
+    size: { width: number; height: number }
+  ) => {
+    dispatch({ type: "SAVE_NOTE_SIZE", payload: { id, size } });
   };
 
   const editNote = async (updatedNote: NoteType) => {
@@ -58,5 +77,7 @@ export const useNotes = () => {
     deleteNote,
     editNote,
     handleDrop,
+    saveNotePosition,
+    saveNoteSize,
   };
 };

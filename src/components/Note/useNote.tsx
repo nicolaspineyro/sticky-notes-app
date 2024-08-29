@@ -5,7 +5,8 @@ import { NoteType } from "../../utils/types";
 export const useNote = (data: NoteType) => {
   const { title, content } = data;
   const [edit, setEdit] = useState(false);
-  const { state, editNote } = useNotes();
+  const { state, editNote, deleteNote, saveNotePosition, saveNoteSize } =
+    useNotes();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,6 +22,30 @@ export const useNote = (data: NoteType) => {
 
   const handleEditNote = (note: NoteType) => editNote(note);
   const handleEditState = () => setEdit((p) => !p);
+
+  const handleDragEnd = (
+    e: React.DragEvent,
+    position: { x: number; y: number }
+  ) => {
+    const deleteZone = document.querySelector(".delete-zone");
+    if (deleteZone) {
+      const deleteZoneRect = deleteZone.getBoundingClientRect();
+      if (
+        e.clientX >= deleteZoneRect.left &&
+        e.clientX <= deleteZoneRect.right &&
+        e.clientY >= deleteZoneRect.top &&
+        e.clientY <= deleteZoneRect.bottom
+      ) {
+        deleteNote(data.id);
+      } else {
+        saveNotePosition(data.id, position);
+      }
+    }
+  };
+
+  const handleResizeEnd = (size: { width: number; height: number }) => {
+    saveNoteSize(data.id, size);
+  };
 
   const renderNoteContent = () => {
     return (
@@ -62,6 +87,8 @@ export const useNote = (data: NoteType) => {
     renderNoteContent,
     handleEditNote,
     handleEditState,
+    handleResizeEnd,
     handleSubmit,
+    handleDragEnd,
   };
 };
