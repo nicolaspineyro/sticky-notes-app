@@ -9,12 +9,12 @@ interface Bounds {
 }
 
 export const useDragAndStick = (
-  id: number,
   initialPosition: { x: number; y: number },
   boundsRef: React.RefObject<HTMLElement>,
   elementRef: React.RefObject<HTMLElement>
 ) => {
   const [position, setPosition] = useState(initialPosition);
+  const [isDragging, setIsDragging] = useState(false);
   const [bounds, setBounds] = useState<Bounds>({
     minX: 0,
     maxX: 0,
@@ -55,26 +55,18 @@ export const useDragAndStick = (
     };
   }, [boundsRef, elementRef]);
 
-  const handleDragStart = (e: React.DragEvent) => {
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
     dragStartPosRef.current = {
       x: e.clientX - position.x,
       y: e.clientY - position.y,
     };
-
-    const emptyImage = document.createElement("img");
-    emptyImage.src =
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-    e.dataTransfer.setDragImage(emptyImage, 0, 0);
-    e.dataTransfer.setData("text/plain", id.toString());
-    e.dataTransfer.effectAllowed = "move";
-
     setZIndex(elementRef.current);
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
   };
 
-  const handleDrag = (e: React.DragEvent) => {
-    if (e.clientX <= 0 && e.clientY <= 0) {
-      return;
-    }
+  const handleMouseMove = (e: MouseEvent) => {
     let newX = e.clientX - dragStartPosRef.current.x;
     let newY = e.clientY - dragStartPosRef.current.y;
 
@@ -84,6 +76,12 @@ export const useDragAndStick = (
     setPosition({ x: newX, y: newY });
   };
 
+  const handleMouseUp = () => {
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+    setIsDragging(false);
+  };
+
   const stickyStyles = {
     position: "absolute",
     top: position.y,
@@ -91,9 +89,9 @@ export const useDragAndStick = (
   } as React.CSSProperties;
 
   return {
+    isDragging,
     position,
     stickyStyles,
-    handleDragStart,
-    handleDrag,
+    handleMouseDown,
   };
 };

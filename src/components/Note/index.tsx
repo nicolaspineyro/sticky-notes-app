@@ -10,34 +10,31 @@ interface INoteProps {
 }
 
 const Note = ({ data, boundsRef }: INoteProps) => {
-  const { id, color, position: initialPosition, size: initialSize } = data;
+  const { color, position: initialPosition, size: initialSize } = data;
   const noteRef = useRef<HTMLElement>(null);
   const { renderNoteContent, handleDragEnd, handleResizeEnd } = useNote(data);
+  const { currentSize, isResizing, resizeMouseDown } = useResize(
+    initialSize,
+    boundsRef
+  );
   const {
     position: currentPosition,
+    isDragging,
     stickyStyles,
-    handleDrag,
-    handleDragStart,
-  } = useDragAndStick(id, initialPosition, boundsRef, noteRef);
-  const { currentSize, isResizing, resizeMouseDown } = useResize(
-    boundsRef,
-    initialSize
-  );
+    handleMouseDown,
+  } = useDragAndStick(initialPosition, boundsRef, noteRef);
 
   return (
     <article
-      id={`note-${id}`}
       ref={noteRef}
-      className={`note ${isResizing ? "no-select" : ""}`}
+      className={`note ${isResizing || isDragging ? "no-select" : ""}`}
       style={{
         ...stickyStyles,
         ...currentSize,
         backgroundColor: color,
       }}
-      draggable={!isResizing}
-      onDrag={handleDrag}
-      onDragStart={handleDragStart}
-      onDragEnd={(e: React.DragEvent) => handleDragEnd(e, currentPosition)}
+      onMouseUp={(e) => handleDragEnd(e, currentPosition)}
+      onMouseDown={handleMouseDown}
     >
       {renderNoteContent()}
       <div

@@ -1,21 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 
 export const useResize = (
-  boundsRef: React.RefObject<HTMLElement>,
-  initialSize: { width: number; height: number }
+  initialSize: { width: number; height: number },
+  boundsRef: React.RefObject<HTMLElement>
 ) => {
   const [size, setSize] = useState(initialSize);
   const [isResizing, setIsResizing] = useState(false);
   const [bounds, setBounds] = useState({ width: 0, height: 0 });
   const resizeStartPos = useRef({ x: 0, y: 0 });
+  const elementStartPos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const updateBounds = () => {
       if (boundsRef.current) {
         const boundsRect = boundsRef.current.getBoundingClientRect();
         setBounds({
-          width: boundsRect.width,
-          height: boundsRect.height,
+          width: boundsRect.width - 40,
+          height: boundsRect.height - 40,
         });
       }
     };
@@ -25,19 +26,17 @@ export const useResize = (
     return () => window.removeEventListener("resize", updateBounds);
   }, [boundsRef]);
 
-  const resizeMouseMove = (e: { clientX: number; clientY: number }) => {
+  const resizeMouseMove = (e: MouseEvent) => {
     const newWidth = Math.min(
-      e.clientX - resizeStartPos.current.x,
-      bounds.width
+      Math.max(e.clientX - resizeStartPos.current.x, 100),
+      bounds.width - elementStartPos.current.x
     );
     const newHeight = Math.min(
-      e.clientY - resizeStartPos.current.y,
-      bounds.height
+      Math.max(e.clientY - resizeStartPos.current.y, 100),
+      bounds.height - elementStartPos.current.y
     );
 
-    if (newWidth > 100 && newHeight > 100) {
-      setSize({ width: newWidth, height: newHeight });
-    }
+    setSize({ width: newWidth, height: newHeight });
   };
 
   const resizeMouseup = () => {
@@ -47,9 +46,18 @@ export const useResize = (
   };
 
   const resizeMouseDown = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsResizing(true);
+
+    const element = e.currentTarget.parentElement;
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      elementStartPos.current = { x: rect.left, y: rect.top };
+    }
+
     resizeStartPos.current.x = e.clientX - size.width;
     resizeStartPos.current.y = e.clientY - size.height;
+
     document.addEventListener("mousemove", resizeMouseMove);
     document.addEventListener("mouseup", resizeMouseup);
   };

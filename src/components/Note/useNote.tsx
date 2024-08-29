@@ -24,7 +24,7 @@ export const useNote = (data: NoteType) => {
   const handleEditState = () => setEdit((p) => !p);
 
   const handleDragEnd = (
-    e: React.DragEvent,
+    e: React.MouseEvent,
     position: { x: number; y: number }
   ) => {
     const deleteZone = document.querySelector(".delete-zone");
