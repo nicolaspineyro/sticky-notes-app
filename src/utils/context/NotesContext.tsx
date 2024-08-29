@@ -11,13 +11,14 @@ import { loadFromLocalStorage, saveToLocalStorage } from "..";
 interface NotesState {
   notes: NoteType[];
   isLoading: boolean;
+  id: number | null;
   error: string | null;
 }
 
 type NotesAction =
   | { type: "FETCH_NOTES_SUCCESS"; payload: NoteType[] }
   | { type: "FETCH_NOTES_ERROR"; payload: string }
-  | { type: "ADD_NOTE_START" }
+  | { type: "ADD_NOTE_START"; payload: number }
   | { type: "ADD_NOTE_SUCCESS"; payload: NoteType }
   | { type: "ADD_NOTE_ERROR"; payload: string }
   | {
@@ -28,10 +29,10 @@ type NotesAction =
       type: "SAVE_NOTE_SIZE";
       payload: { id: number; size: { width: number; height: number } };
     }
-  | { type: "UPDATE_NOTE_START" }
+  | { type: "UPDATE_NOTE_START"; payload: number }
   | { type: "UPDATE_NOTE_SUCCESS"; payload: NoteType }
   | { type: "UPDATE_NOTE_ERROR"; payload: string }
-  | { type: "DELETE_NOTE_START" }
+  | { type: "DELETE_NOTE_START"; payload: number }
   | { type: "DELETE_NOTE_SUCCESS"; payload: number }
   | { type: "DELETE_NOTE_ERROR"; payload: string };
 
@@ -54,7 +55,12 @@ const notesReducer = (state: NotesState, action: NotesAction): NotesState => {
     case "ADD_NOTE_START":
     case "UPDATE_NOTE_START":
     case "DELETE_NOTE_START":
-      newState = { ...state, isLoading: true, error: null };
+      newState = {
+        ...state,
+        isLoading: true,
+        error: null,
+        id: action.payload,
+      };
       break;
     case "ADD_NOTE_SUCCESS":
       newState = {
@@ -122,6 +128,7 @@ export const NotesProvider = ({ children }: { children: ReactElement }) => {
     notes: [],
     isLoading: false,
     error: null,
+    id: null,
   });
 
   useEffect(() => {

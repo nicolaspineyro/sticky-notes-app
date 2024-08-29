@@ -30,10 +30,10 @@ export const useDragAndStick = (
         const noteRect = elementRef.current.getBoundingClientRect();
 
         setBounds({
-          minX: 0,
-          maxX: whiteBoardRect.width - noteRect.width,
+          minX: whiteBoardRect.left,
+          maxX: whiteBoardRect.right - noteRect.width,
           minY: whiteBoardRect.top,
-          maxY: whiteBoardRect.height - noteRect.height,
+          maxY: whiteBoardRect.bottom - noteRect.height,
         });
       }
     };
@@ -56,6 +56,7 @@ export const useDragAndStick = (
   }, [boundsRef, elementRef]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
     setIsDragging(true);
     dragStartPosRef.current = {
       x: e.clientX - position.x,

@@ -7,9 +7,10 @@ export const useNotes = () => {
   const { state, dispatch } = useNotesContext();
 
   const addNote = async () => {
-    dispatch({ type: "ADD_NOTE_START" });
+    const id = Math.floor(Math.random() * 999);
+    dispatch({ type: "ADD_NOTE_START", payload: id });
     const newNote = {
-      id: Math.floor(Math.random() * 100),
+      id: Math.floor(Math.random() * 999),
       title: "New Note",
       content: "New Note Content",
       color: Object.values(NOTES_COLORS)[Math.floor(Math.random() * 10)],
@@ -23,17 +24,21 @@ export const useNotes = () => {
         height: 200,
       },
     };
+    dispatch({ type: "ADD_NOTE_SUCCESS", payload: newNote });
     try {
       const addedNote = await simulateApiCall(newNote);
-      dispatch({ type: "ADD_NOTE_SUCCESS", payload: addedNote });
+      if (JSON.stringify(addedNote) !== JSON.stringify(newNote)) {
+        dispatch({ type: "UPDATE_NOTE_SUCCESS", payload: addedNote });
+      }
     } catch (error) {
       console.error(error);
+      dispatch({ type: "DELETE_NOTE_SUCCESS", payload: newNote.id });
       dispatch({ type: "ADD_NOTE_ERROR", payload: "Failed to add note" });
     }
   };
 
   const deleteNote = async (id: number) => {
-    dispatch({ type: "DELETE_NOTE_START" });
+    dispatch({ type: "DELETE_NOTE_START", payload: id });
     try {
       await simulateApiCall(id);
       dispatch({ type: "DELETE_NOTE_SUCCESS", payload: id });
@@ -55,7 +60,7 @@ export const useNotes = () => {
   };
 
   const editNote = async (updatedNote: NoteType) => {
-    dispatch({ type: "UPDATE_NOTE_START" });
+    dispatch({ type: "UPDATE_NOTE_START", payload: updatedNote.id });
     try {
       const editedNote = await simulateApiCall(updatedNote);
       dispatch({ type: "UPDATE_NOTE_SUCCESS", payload: editedNote });

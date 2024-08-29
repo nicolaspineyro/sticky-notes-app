@@ -1,27 +1,43 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { useNotes } from "../../utils/hooks/useNotes";
 import { NoteType } from "../../utils/types";
+import LoadingSpinner from "../UI/LoadingSpinner";
 
 export const useNote = (data: NoteType) => {
   const { title, content } = data;
   const [edit, setEdit] = useState(false);
+  const [form, setForm] = useState({
+    title,
+    content,
+  });
   const { state, editNote, deleteNote, saveNotePosition, saveNoteSize } =
     useNotes();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleBlur = (e: React.FocusEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget);
     const newNote = {
       ...data,
-      title: formData.get("title") as string,
       content: formData.get("content") as string,
+      title: formData.get("title") as string,
     };
-    handleEditNote(newNote);
+    if (JSON.stringify(newNote) === JSON.stringify(data)) return;
+    editNote(newNote);
     setEdit(false);
   };
 
+  const handleChange = (e: {
+    currentTarget: { value: string; name: string };
+  }) => {
+    const value = e.currentTarget.value;
+    const name = e.currentTarget.name;
+    setForm((p) => ({ ...p, [name]: value }));
+  };
+
   const handleEditNote = (note: NoteType) => editNote(note);
-  const handleEditState = () => setEdit((p) => !p);
+  const handleEditState = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+    setEdit((p) => !p);
+  };
 
   const handleDragEnd = (
     e: React.MouseEvent,
@@ -50,33 +66,21 @@ export const useNote = (data: NoteType) => {
   const renderNoteContent = () => {
     return (
       <>
-        {!edit && (
-          <button
-            disabled={state.isLoading}
-            className="edit-button"
-            onClick={handleEditState}
-          >
-            <i className="fas fa-edit"></i>
-          </button>
-        )}
+        {state.isLoading && state.id === data.id ? <LoadingSpinner /> : null}
         {edit ? (
-          <form onSubmit={handleSubmit}>
-            <div className="field">
-              <label htmlFor="title">Title</label>
-              <input name="title" defaultValue={title} />
-            </div>
-
-            <div className="field">
-              <label htmlFor="content">Content</label>
-              <textarea name="content" defaultValue={content} />
-            </div>
-            <button type="submit">Save</button>
+          <form onBlur={handleBlur}>
+            <input onChange={handleChange} name="title" value={form.title} />
+            <textarea
+              onChange={handleChange}
+              name="content"
+              value={form.content}
+            />
           </form>
         ) : (
-          <>
-            <h4>{title}</h4>
-            <p>{content}</p>
-          </>
+          <div onClick={handleEditState}>
+            <h4>{form.title}</h4>
+            <p>{form.content}</p>
+          </div>
         )}
       </>
     );
@@ -88,7 +92,6 @@ export const useNote = (data: NoteType) => {
     handleEditNote,
     handleEditState,
     handleResizeEnd,
-    handleSubmit,
     handleDragEnd,
   };
 };

@@ -4,6 +4,23 @@ body {
   width: 100%;
 }
 
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+p,
+h4 {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
 #root {
   height: 100%;
   width: 100%;
@@ -22,78 +39,110 @@ h1 {
 }
 
 .header-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  position: absolute;
+  color: #242424;
+  left: 2rem;
 }
 
 .delete-zone {
   display: flex;
-  flex-direction: column;
-  margin: 2rem;
   align-self: flex-end;
-  border: 1px solid #ff6961;
   border-radius: 10px;
-  display: flex;
   justify-content: center;
   align-items: center;
-  color: #ff6961;
+  background-color: #ff6961;
+  color: white;
   width: 15rem;
   height: 15rem;
+  margin: 2.5rem;
+  font-size: 45px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .notes-board {
   height: 100%;
+  padding: 1.5rem;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
 .whiteboard {
   display: flex;
   flex-direction: column;
-  background-color: antiquewhite;
+  background-color: whitesmoke;
+  border-radius: 10px;
   height: 100%;
   box-sizing: border-box;
 }
 
 .note {
-  border-radius: 5px;
+  border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  padding: 1rem;
+  padding: 1.5rem;
   text-overflow: ellipsis;
   overflow: auto;
   color: black;
 
+  .loader {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
   form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
+  }
 
-    input,
-    textarea {
-      padding: 0.5rem;
-      border: 1px solid black;
-      border-radius: 10px;
-      background-color: transparent;
-      color: black;
-      resize: vertical;
-    }
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-    label {
-      font-size: 10px;
-      font-weight: 500;
-    }
+  input {
+    border-style: none;
+    border-radius: 15px;
+    background-color: transparent;
+    color: black;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.5;
+    width: 100%;
+  }
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+  textarea {
+    border-style: none;
+    border-radius: 15px;
+    background-color: transparent;
+    color: black;
+    font-family: "Quicksand", sans-serif;
+    font-size: 16px;
+    height: 90%;
+    width: 100%;
   }
 }
 
 .note::-webkit-scrollbar {
   width: 0px;
   background: transparent;
+}
+
+.add-button {
+  border-radius: 100%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  bottom: 2.5em;
+  right: 5rem;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
 }
 
 .edit-button {
@@ -104,6 +153,7 @@ h1 {
   color: black;
   right: 0;
   top: 0;
+  border-radius: 100%;
 }
 
 .resize-border {
@@ -113,4 +163,15 @@ h1 {
   width: 30px;
   height: 30px;
   cursor: nwse-resize;
+}
+
+textarea,
+input {
+  border: none;
+  overflow: auto;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  resize: none;
 }
