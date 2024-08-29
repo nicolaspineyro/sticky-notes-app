@@ -14,6 +14,32 @@ h1 {
   margin: 1rem;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.delete-zone {
+  margin: 2rem;
+  align-self: flex-end;
+  border: 1px solid #ff6961;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ff6961;
+  width: 100px;
+  height: 100px;
+}
+
 .notes-board {
   height: 100%;
   overflow: hidden;
