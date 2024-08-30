@@ -4,7 +4,7 @@ import { useDragAndStick } from "../../utils/hooks/useDragAndStick";
 import { useNote } from "./useNote";
 import { useRef } from "react";
 
-interface INoteProps {
+export interface INoteProps {
   data: NoteType;
   boundsRef: React.RefObject<HTMLElement>;
 }

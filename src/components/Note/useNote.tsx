@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useNotes } from "../../utils/hooks/useNotes";
-import { NoteType } from "../../utils/types";
+import { NoteType, PositionType, SizeType } from "../../utils/types";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import { debounce, isInDeleteZone } from "../../utils";
 
@@ -26,10 +26,7 @@ export const useNote = (data: NoteType) => {
 
   const handleEditNote = (note: NoteType) => editNote(note);
 
-  const handleDragEnd = (
-    e: React.MouseEvent,
-    position: { x: number; y: number }
-  ) => {
+  const handleDragEnd = (e: React.MouseEvent, position: PositionType) => {
     if (isInDeleteZone(e.clientX, e.clientY)) {
       deleteNote(data.id);
     } else {
@@ -37,7 +34,7 @@ export const useNote = (data: NoteType) => {
     }
   };
 
-  const handleResizeEnd = (size: { width: number; height: number }) => {
+  const handleResizeEnd = (size: SizeType) => {
     saveNoteSize(data.id, size);
   };
 

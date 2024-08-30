@@ -5,7 +5,7 @@ import {
   useEffect,
   useReducer,
 } from "react";
-import { NoteType } from "../types";
+import { PositionType, NoteType, SizeType } from "../types";
 import { loadFromLocalStorage, saveToLocalStorage } from "..";
 
 interface NotesState {
@@ -23,11 +23,11 @@ type NotesAction =
   | { type: "ADD_NOTE_ERROR"; payload: string }
   | {
       type: "SAVE_NOTE_POSITION";
-      payload: { id: number; position: { x: number; y: number } };
+      payload: { id: number; position: PositionType };
     }
   | {
       type: "SAVE_NOTE_SIZE";
-      payload: { id: number; size: { width: number; height: number } };
+      payload: { id: number; size: SizeType };
     }
   | { type: "UPDATE_NOTE_START"; payload: number }
   | { type: "UPDATE_NOTE_SUCCESS"; payload: NoteType }

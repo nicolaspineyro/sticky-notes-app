@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { isInDeleteZone, setZIndex } from "..";
-import { IPosition } from "../types";
+import { PositionType } from "../types";
 
 interface Bounds {
   minX: number;
@@ -10,7 +10,7 @@ interface Bounds {
 }
 
 export const useDragAndStick = (
-  initialPosition: IPosition,
+  initialPosition: PositionType,
   boundsRef: React.RefObject<HTMLElement>,
   elementRef: React.RefObject<HTMLElement>
 ) => {
@@ -100,5 +100,6 @@ export const useDragAndStick = (
     position,
     stickyStyles,
     handleMouseDown,
+    handleMouseMove,
   };
 };

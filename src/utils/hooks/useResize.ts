@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { SizeType } from "../types";
 
 export const useResize = (
-  initialSize: { width: number; height: number },
+  initialSize: SizeType,
   boundsRef: React.RefObject<HTMLElement>
 ) => {
   const [size, setSize] = useState(initialSize);
