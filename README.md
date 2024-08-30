@@ -38,7 +38,7 @@ The architecture of the app components is the following:
 ```
 
 First of all, to solve this challenge the stack chosen consists of Typescript, CSS, and React built with Vite, this is going to be an SPA closed to the user we don't need any SSR as we won't get too many advantages from it. The approach was to keep it simple and concentrate on the components and performance.
-For the pattern, I choose to build custom hooks to encapsulate the business logic from presentation components and core functionalities. I choose context to provide actions in various levels deep into the component tree, if in the future we want to add more boards or components to the whiteboard we can extend functionalities easier and more organized.
+For the pattern, I build custom hooks to encapsulate the business logic from presentation components and core functionalities. I choose context to provide actions in various levels deep into the component tree, if we want to add more boards or components to the whiteboard we can extend functionalities easier and more organized.
 
 These are the custom hooks built:
 
