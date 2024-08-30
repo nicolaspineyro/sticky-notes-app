@@ -2,7 +2,8 @@
 
 Welcome to the Sticky Notes App repository! This project is a solution to the challenge of building a Sticky Notes App, where the user can create, edit, and delete notes.
 
-![ScreenRecording2024-08-29at12 40 37PM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/b133efb5-38e6-41a3-93c2-deeb353e7da2)
+![ScreenRecording2024-08-30at10 43 28AM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/5fe1f2ba-a302-45b5-919d-ed1334e67c8c)
+
 
 ### Overview And Solution
 
@@ -28,9 +29,12 @@ The architecture of the app components is the following:
 * App
    - NotesContext
       - NotesBoard
-            - Notes Action Buttons
+            - Title
             - WhiteBoard
-               - Note
+               - ColorMenu
+               - DeleteZone
+               - Notes
+               - GhostNote
 ```
 
 First of all, to solve this challenge the stack chosen consists of Typescript, CSS, and React built with Vite, this is going to be an SPA closed to the user we don't need any SSR as we won't get too many advantages from it. The approach was to keep it simple and concentrate on the components and performance.
