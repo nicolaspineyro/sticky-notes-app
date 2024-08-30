@@ -6,12 +6,14 @@ export type NoteType = {
   content: string;
   color: NOTES_COLORS;
   created_at: Date;
-  position: {
-    x: number;
-    y: number;
-  };
+  position: IPosition;
   size: {
     width: number;
     height: number;
   };
 };
+
+export interface IPosition {
+  x: number;
+  y: number;
+}

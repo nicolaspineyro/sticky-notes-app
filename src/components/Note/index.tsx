@@ -20,6 +20,7 @@ const Note = ({ data, boundsRef }: INoteProps) => {
   const {
     position: currentPosition,
     isDragging,
+    isOverDeleteZone,
     stickyStyles,
     handleMouseDown,
   } = useDragAndStick(initialPosition, boundsRef, noteRef);
@@ -27,7 +28,9 @@ const Note = ({ data, boundsRef }: INoteProps) => {
   return (
     <article
       ref={noteRef}
-      className={`note ${isResizing || isDragging ? "no-select" : ""}`}
+      className={`note ${isResizing || isDragging ? "no-select" : ""} ${
+        isOverDeleteZone ? "note-delete-zone" : ""
+      } `}
       style={{
         ...stickyStyles,
         ...currentSize,

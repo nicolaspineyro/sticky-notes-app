@@ -1,17 +1,21 @@
 import WhiteBoard from "../WhiteBoard";
 import { useNotes } from "../../utils/hooks/useNotes";
+import ColorMenu from "../UI/ColorMenu";
 
 const NotesBoard = () => {
-  const { state, addNote } = useNotes();
+  const { state, ghostNote, ghostNoteTracker, commitNote, initAddNote } =
+    useNotes();
   const { notes } = state;
 
   return (
-    <section className="notes-board">
+    <section
+      className="notes-board"
+      onMouseMove={ghostNote.isActive ? ghostNoteTracker : undefined}
+      onClick={ghostNote.isActive ? commitNote : undefined}
+    >
       <h1 className="header-title">DreamNotes</h1>
-      <button className="add-button" onClick={addNote}>
-        <i className="fa-solid fa-plus"></i>
-      </button>
-      <WhiteBoard notes={notes} />
+      <ColorMenu handleSelect={initAddNote} />
+      <WhiteBoard notes={notes} ghostNote={ghostNote} />
     </section>
   );
 };

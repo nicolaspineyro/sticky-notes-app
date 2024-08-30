@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { setZIndex } from "..";
+import { isInDeleteZone, setZIndex } from "..";
+import { IPosition } from "../types";
 
 interface Bounds {
   minX: number;
@@ -9,12 +10,13 @@ interface Bounds {
 }
 
 export const useDragAndStick = (
-  initialPosition: { x: number; y: number },
+  initialPosition: IPosition,
   boundsRef: React.RefObject<HTMLElement>,
   elementRef: React.RefObject<HTMLElement>
 ) => {
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
+  const [isOverDeleteZone, setIsOverDeleteZone] = useState(false);
   const [bounds, setBounds] = useState<Bounds>({
     minX: 0,
     maxX: 0,
@@ -74,6 +76,9 @@ export const useDragAndStick = (
     newX = Math.max(bounds.minX, Math.min(newX, bounds.maxX));
     newY = Math.max(bounds.minY, Math.min(newY, bounds.maxY));
 
+    const isCurrentlyOverDeleteZone = isInDeleteZone(e.clientX, e.clientY);
+    setIsOverDeleteZone(isCurrentlyOverDeleteZone);
+
     setPosition({ x: newX, y: newY });
   };
 
@@ -91,6 +96,7 @@ export const useDragAndStick = (
 
   return {
     isDragging,
+    isOverDeleteZone,
     position,
     stickyStyles,
     handleMouseDown,

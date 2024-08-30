@@ -1,29 +1,24 @@
-import { simulateApiCall } from "..";
+import { useState } from "react";
+import { isInDeleteZone, simulateApiCall } from "..";
 import { useNotesContext } from "../context/NotesContext";
 import { NOTES_COLORS } from "../enums";
-import { NoteType } from "../types";
+import { IPosition, NoteType } from "../types";
 
 export const useNotes = () => {
   const { state, dispatch } = useNotesContext();
+  const [ghostNote, setGhostNote] = useState<{
+    isActive: boolean;
+    note?: NoteType;
+  }>({
+    isActive: false,
+    note: undefined,
+  });
+  const whiteBoardRect = document
+    .querySelector(".whiteboard")
+    ?.getBoundingClientRect();
 
-  const addNote = async () => {
-    const id = Math.floor(Math.random() * 999);
-    dispatch({ type: "ADD_NOTE_START", payload: id });
-    const newNote = {
-      id: Math.floor(Math.random() * 999),
-      title: "New Note",
-      content: "New Note Content",
-      color: Object.values(NOTES_COLORS)[Math.floor(Math.random() * 10)],
-      created_at: new Date(),
-      position: {
-        x: 350,
-        y: 350,
-      },
-      size: {
-        width: 200,
-        height: 200,
-      },
-    };
+  const addNote = async (newNote: NoteType) => {
+    dispatch({ type: "ADD_NOTE_START", payload: newNote.id });
     dispatch({ type: "ADD_NOTE_SUCCESS", payload: newNote });
     try {
       const addedNote = await simulateApiCall(newNote);
@@ -48,7 +43,7 @@ export const useNotes = () => {
     }
   };
 
-  const saveNotePosition = (id: number, position: { x: number; y: number }) => {
+  const saveNotePosition = (id: number, position: IPosition) => {
     dispatch({ type: "SAVE_NOTE_POSITION", payload: { id, position } });
   };
 
@@ -70,19 +65,73 @@ export const useNotes = () => {
     }
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const id = e.dataTransfer.getData("text/plain");
-    deleteNote(Number(id));
+  const ghostNoteTracker = (e: React.MouseEvent) => {
+    if (!whiteBoardRect) return;
+
+    const ghostNoteWidth = ghostNote.note?.size.width || 0;
+    const ghostNoteHeight = ghostNote.note?.size.height || 0;
+
+    let newX = e.clientX - ghostNoteWidth;
+    let newY = e.clientY - ghostNoteHeight;
+
+    const minX = whiteBoardRect.left;
+    const maxX = whiteBoardRect.right - ghostNoteWidth - 50;
+    const minY = whiteBoardRect.top;
+    const maxY = whiteBoardRect.bottom - ghostNoteHeight - 65;
+
+    newX = Math.max(minX, Math.min(newX, maxX));
+    newY = Math.max(minY, Math.min(newY, maxY));
+
+    if (ghostNote.isActive) {
+      setGhostNote((prev) => ({
+        ...prev,
+        note: { ...ghostNote.note!, position: { x: newX, y: newY } },
+      }));
+    }
+  };
+
+  const commitNote = (e: React.MouseEvent<HTMLElement>) => {
+    if (isInDeleteZone(e.clientX, e.clientY)) {
+      setGhostNote({ isActive: false, note: undefined });
+      return;
+    }
+    if (ghostNote.isActive && ghostNote.note !== undefined) {
+      addNote(ghostNote.note);
+      setGhostNote({ isActive: false, note: undefined });
+    }
+  };
+
+  const initAddNote = (
+    e: React.MouseEvent<HTMLElement>,
+    color?: NOTES_COLORS
+  ) => {
+    const newNote = {
+      id: Date.now(),
+      title: "New Note",
+      content: "",
+      color: color
+        ? color
+        : Object.values(NOTES_COLORS)[Math.floor(Math.random() * 6)],
+      created_at: new Date(),
+      position: { x: e.clientX - 90, y: e.clientY - 90 },
+      size: {
+        width: 90,
+        height: 90,
+      },
+    };
+    setGhostNote({ isActive: true, note: newNote });
   };
 
   return {
     state,
+    ghostNote,
     addNote,
     deleteNote,
     editNote,
-    handleDrop,
     saveNotePosition,
     saveNoteSize,
+    ghostNoteTracker,
+    commitNote,
+    initAddNote,
   };
 };

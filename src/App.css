@@ -47,7 +47,7 @@ h1 {
 .delete-zone {
   display: flex;
   align-self: flex-end;
-  border-radius: 10px;
+  border-radius: 15px;
   justify-content: center;
   align-items: center;
   background-color: #ff6961;
@@ -78,10 +78,11 @@ h1 {
 .note {
   border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   text-overflow: ellipsis;
   overflow: auto;
   color: black;
+  cursor: grab;
 
   .loader {
     position: absolute;
@@ -92,42 +93,39 @@ h1 {
   form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
+    height: 100%;
     gap: 10px;
   }
 
   input {
-    border-style: none;
-    border-radius: 15px;
     background-color: transparent;
     color: black;
     font-family: "Quicksand", sans-serif;
     font-weight: 700;
     font-size: 16px;
     line-height: 1.5;
-    width: 100%;
   }
 
   textarea {
-    border-style: none;
-    border-radius: 15px;
     background-color: transparent;
     color: black;
     font-family: "Quicksand", sans-serif;
     font-size: 16px;
-    height: 90%;
-    width: 100%;
+    height: 100%;
+    resize: none;
+    overflow: hidden;
   }
+}
+
+.note-delete-zone {
+  opacity: 0.75;
+  cursor: no-drop;
 }
 
 .note::-webkit-scrollbar {
   width: 0px;
   background: transparent;
+  resize: none;
 }
 
 .add-button {
@@ -136,8 +134,8 @@ h1 {
   height: 100px;
   width: 100px;
   position: absolute;
-  bottom: 2.5em;
-  right: 5rem;
+  bottom: 8rem;
+  right: 8rem;
   font-size: 40px;
   display: flex;
   justify-content: center;
@@ -174,4 +172,34 @@ input {
   -moz-box-shadow: none;
   box-shadow: none;
   resize: none;
+}
+
+.color-menu {
+  position: absolute;
+  bottom: 4rem;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 3rem;
+  width: 24rem;
+  background-color: #3d3d48;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.color-option {
+  width: 45px;
+  height: 45px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  cursor: pointer;
+  border: 2px solid #fff;
 }

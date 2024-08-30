@@ -2,12 +2,14 @@ import React, { useCallback, useRef } from "react";
 import { NoteType } from "../../utils/types";
 import Note from "../Note";
 import DeleteZone from "../NotesBoard/DeleteZone";
+import GhostNote from "../Note/GhostNote";
 
 interface IWhiteBoardProps {
   notes: NoteType[];
+  ghostNote: { isActive: boolean; note?: NoteType };
 }
 
-const WhiteBoard = ({ notes }: IWhiteBoardProps) => {
+const WhiteBoard = ({ notes, ghostNote }: IWhiteBoardProps) => {
   const whiteBoardRef = useRef<HTMLElement>(null);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -27,6 +29,9 @@ const WhiteBoard = ({ notes }: IWhiteBoardProps) => {
     >
       <DeleteZone />
       {renderNotes()}
+      {ghostNote.isActive && ghostNote.note && (
+        <GhostNote data={ghostNote.note} />
+      )}
     </section>
   );
 };
