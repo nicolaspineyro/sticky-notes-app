@@ -1,3 +1,5 @@
+import React from "react";
+
 const DeleteZone = () => {
   return (
     <div className="delete-zone">
@@ -6,4 +8,4 @@ const DeleteZone = () => {
   );
 };
 
-export default DeleteZone;
+export default React.memo(DeleteZone);

@@ -1,4 +1,6 @@
-import { NoteType } from "./types";
+import { NoteType } from "./typescript/types";
+
+export const STORAGE_KEY = "sticky_notes";
 
 export const setZIndex = (selectedNote: HTMLElement | null) => {
   if (!selectedNote) return;
@@ -16,13 +18,11 @@ export const setZIndex = (selectedNote: HTMLElement | null) => {
 export const simulateApiCall = <T>(data: T): Promise<T> =>
   new Promise((resolve) => setTimeout(() => resolve(data), 1000));
 
-const STORAGE_KEY = "sticky_notes";
-
-export const saveToLocalStorage = (notes: NoteType[]) => {
+export const saveNotesToLocalStorage = (notes: NoteType[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
 };
 
-export const loadFromLocalStorage = (): NoteType[] => {
+export const loadNotesFromLocalStorage = (): NoteType[] => {
   const storedNotes = localStorage.getItem(STORAGE_KEY);
   return storedNotes ? JSON.parse(storedNotes) : [];
 };

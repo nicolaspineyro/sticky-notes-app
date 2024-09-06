@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { isInDeleteZone, setZIndex } from "..";
-import { PositionType } from "../types";
+import { PositionType } from "../typescript/types";
 
 interface Bounds {
   minX: number;
@@ -23,6 +23,7 @@ export const useDragAndStick = (
     minY: 0,
     maxY: 0,
   });
+
   const dragStartPosRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -50,14 +51,13 @@ export const useDragAndStick = (
 
     updateBounds();
     window.addEventListener("resize", updateBounds);
-
     return () => {
       window.removeEventListener("resize", updateBounds);
       resizeObserver.disconnect();
     };
   }, [boundsRef, elementRef]);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const dragAndStickMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
     setIsDragging(true);
     dragStartPosRef.current = {
@@ -77,8 +77,8 @@ export const useDragAndStick = (
     newY = Math.max(bounds.minY, Math.min(newY, bounds.maxY));
 
     const isCurrentlyOverDeleteZone = isInDeleteZone(e.clientX, e.clientY);
-    setIsOverDeleteZone(isCurrentlyOverDeleteZone);
 
+    setIsOverDeleteZone(isCurrentlyOverDeleteZone);
     setPosition({ x: newX, y: newY });
   };
 
@@ -99,7 +99,6 @@ export const useDragAndStick = (
     isOverDeleteZone,
     position,
     stickyStyles,
-    handleMouseDown,
-    handleMouseMove,
+    dragAndStickMouseDown,
   };
 };
