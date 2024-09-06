@@ -5,8 +5,8 @@ import {
   useEffect,
   useReducer,
 } from "react";
-import { PositionType, NoteType, SizeType } from "../types";
-import { loadFromLocalStorage, saveToLocalStorage } from "..";
+import { NotesActions, NoteType } from "../typescript/types";
+import { loadNotesFromLocalStorage, saveNotesToLocalStorage } from "..";
 
 interface NotesState {
   notes: NoteType[];
@@ -15,42 +15,21 @@ interface NotesState {
   error: string | null;
 }
 
-type NotesAction =
-  | { type: "FETCH_NOTES_SUCCESS"; payload: NoteType[] }
-  | { type: "FETCH_NOTES_ERROR"; payload: string }
-  | { type: "ADD_NOTE_START"; payload: number }
-  | { type: "ADD_NOTE_SUCCESS"; payload: NoteType }
-  | { type: "ADD_NOTE_ERROR"; payload: string }
-  | {
-      type: "SAVE_NOTE_POSITION";
-      payload: { id: number; position: PositionType };
-    }
-  | {
-      type: "SAVE_NOTE_SIZE";
-      payload: { id: number; size: SizeType };
-    }
-  | { type: "UPDATE_NOTE_START"; payload: number }
-  | { type: "UPDATE_NOTE_SUCCESS"; payload: NoteType }
-  | { type: "UPDATE_NOTE_ERROR"; payload: string }
-  | { type: "DELETE_NOTE_START"; payload: number }
-  | { type: "DELETE_NOTE_SUCCESS"; payload: number }
-  | { type: "DELETE_NOTE_ERROR"; payload: string };
-
 const NotesContext = createContext<
   | {
       state: NotesState;
-      dispatch: React.Dispatch<NotesAction>;
+      dispatch: React.Dispatch<NotesActions>;
     }
   | undefined
 >(undefined);
 
-const notesReducer = (state: NotesState, action: NotesAction): NotesState => {
+const notesReducer = (state: NotesState, action: NotesActions): NotesState => {
   let newState: NotesState;
 
   switch (action.type) {
     case "FETCH_NOTES_SUCCESS":
       newState = { ...state, notes: action.payload, isLoading: false };
-      saveToLocalStorage(newState.notes);
+      saveNotesToLocalStorage(newState.notes);
       break;
     case "ADD_NOTE_START":
     case "UPDATE_NOTE_START":
@@ -68,7 +47,7 @@ const notesReducer = (state: NotesState, action: NotesAction): NotesState => {
         notes: [...state.notes, action.payload],
         isLoading: false,
       };
-      saveToLocalStorage(newState.notes);
+      saveNotesToLocalStorage(newState.notes);
       break;
     case "UPDATE_NOTE_SUCCESS":
       newState = {
@@ -78,7 +57,7 @@ const notesReducer = (state: NotesState, action: NotesAction): NotesState => {
         ),
         isLoading: false,
       };
-      saveToLocalStorage(newState.notes);
+      saveNotesToLocalStorage(newState.notes);
       break;
     case "SAVE_NOTE_POSITION":
       newState = {
@@ -89,7 +68,7 @@ const notesReducer = (state: NotesState, action: NotesAction): NotesState => {
             : note
         ),
       };
-      saveToLocalStorage(newState.notes);
+      saveNotesToLocalStorage(newState.notes);
       break;
     case "SAVE_NOTE_SIZE":
       newState = {
@@ -100,7 +79,7 @@ const notesReducer = (state: NotesState, action: NotesAction): NotesState => {
             : note
         ),
       };
-      saveToLocalStorage(newState.notes);
+      saveNotesToLocalStorage(newState.notes);
       break;
     case "DELETE_NOTE_SUCCESS":
       newState = {
@@ -108,7 +87,7 @@ const notesReducer = (state: NotesState, action: NotesAction): NotesState => {
         notes: state.notes.filter((note) => note.id !== action.payload),
         isLoading: false,
       };
-      saveToLocalStorage(newState.notes);
+      saveNotesToLocalStorage(newState.notes);
       break;
     case "FETCH_NOTES_ERROR":
     case "ADD_NOTE_ERROR":
@@ -133,7 +112,7 @@ export const NotesProvider = ({ children }: { children: ReactElement }) => {
 
   useEffect(() => {
     const loadNotes = () => {
-      const storedNotes = loadFromLocalStorage();
+      const storedNotes = loadNotesFromLocalStorage();
       dispatch({ type: "FETCH_NOTES_SUCCESS", payload: storedNotes });
     };
     loadNotes();

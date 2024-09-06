@@ -1,9 +1,10 @@
+import { useNotesContext } from "../../utils/context/NotesContext";
 import WhiteBoard from "../WhiteBoard";
-import { useNotes } from "../../utils/hooks/useNotes";
 
 const NotesBoard = () => {
-  const { state } = useNotes();
-  const { notes } = state;
+  const {
+    state: { notes },
+  } = useNotesContext();
 
   return (
     <section className="notes-board">

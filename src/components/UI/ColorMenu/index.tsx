@@ -1,4 +1,5 @@
-import { NOTES_COLORS } from "../../../utils/enums";
+import React from "react";
+import { NOTES_COLORS } from "../../../utils/typescript/enums";
 
 interface IColorMenuProps {
   handleSelect: (
@@ -14,6 +15,7 @@ const ColorMenu = ({ handleSelect }: IColorMenuProps) => {
   ) => {
     handleSelect(e, color);
   };
+
   return (
     <div className="color-menu">
       <button onClick={(e) => handleClick(e)} className="color-option">
@@ -31,4 +33,4 @@ const ColorMenu = ({ handleSelect }: IColorMenuProps) => {
   );
 };
 
-export default ColorMenu;
+export default React.memo(ColorMenu);

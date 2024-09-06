@@ -1,40 +1,48 @@
-import React, { useCallback, useRef } from "react";
-import { NoteType } from "../../utils/types";
+import React, { useRef } from "react";
+import { NoteType } from "../../utils/typescript/types";
 import Note from "../Note";
-import DeleteZone from "../NotesBoard/DeleteZone";
-import GhostNote from "../Note/GhostNote";
+import DeleteZone from "./DeleteZone";
+import GhostNote from "./GhostNote";
 import ColorMenu from "../UI/ColorMenu";
-import { useNotes } from "../../utils/hooks/useNotes";
+import { useNotesManager } from "../../utils/hooks/useNotesManager";
 
 interface IWhiteBoardProps {
   notes: NoteType[];
 }
 
 const WhiteBoard = ({ notes }: IWhiteBoardProps) => {
-  const { ghostNote, initAddNote, commitNote } = useNotes();
+  const {
+    draftNote,
+    isLoading,
+    loadingId,
+    initAddNote,
+    commitNote,
+    editNote,
+    deleteNote,
+    saveNotePosition,
+    saveNoteSize,
+  } = useNotesManager();
   const whiteBoardRef = useRef<HTMLElement>(null);
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-  }, []);
-
-  const renderNotes = () =>
-    notes.map((data) => (
-      <Note key={`note-${data.id}`} data={data} boundsRef={whiteBoardRef} />
-    ));
-
   return (
-    <section
-      ref={whiteBoardRef}
-      onDragOver={handleDragOver}
-      className="whiteboard"
-    >
+    <section ref={whiteBoardRef} className="whiteboard">
       <ColorMenu handleSelect={initAddNote} />
       <DeleteZone />
-      {renderNotes()}
-      {ghostNote.isActive && ghostNote.note && (
+      {notes.map((data) => (
+        <Note
+          key={`note-${data.id}`}
+          data={data}
+          boundsRef={whiteBoardRef}
+          isLoading={isLoading && loadingId === data.id}
+          editNote={editNote}
+          deleteNote={deleteNote}
+          saveNotePosition={saveNotePosition}
+          saveNoteSize={saveNoteSize}
+        />
+      ))}
+      {draftNote.isActive && draftNote.note && (
         <GhostNote
-          data={ghostNote.note}
+          data={draftNote.note}
           boundsRef={whiteBoardRef}
           onCommit={commitNote}
         />
